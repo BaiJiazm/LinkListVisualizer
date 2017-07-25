@@ -1,24 +1,24 @@
 #include<QDebug>
 #include <math.h>
-#include "linklist.h"
-#include "ui_linklist.h"
+#include "clinklist.h"
+#include "ui_clinklist.h"
 #include "myarrowitem.h"
 
 void sleep(unsigned int msec);
 
-const QBrush LinkList::normalBursh=QBrush(Qt::GlobalColor::darkGray);
-const QBrush LinkList::visitedBrush=QBrush(Qt::GlobalColor::yellow);
-const QBrush LinkList::markBrush=QBrush(Qt::GlobalColor::green);
+const QBrush CLinkList::normalBursh=QBrush(Qt::GlobalColor::darkGray);
+const QBrush CLinkList::visitedBrush=QBrush(Qt::GlobalColor::yellow);
+const QBrush CLinkList::markBrush=QBrush(Qt::GlobalColor::green);
 
-const QFont LinkList::headLabelFont=QFont("Consolas");
-const QFont LinkList::dataFont=QFont("Consolas",8);
+const QFont CLinkList::headLabelFont=QFont("Consolas");
+const QFont CLinkList::dataFont=QFont("Consolas",8);
 
-const QIntValidator LinkList::dataValidator(-999999999,999999999);
+const QIntValidator CLinkList::dataValidator(-999999999,999999999);
 
 //构造函数
-LinkList::LinkList(QWidget *parent) :
+CLinkList::CLinkList(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::LinkList)
+    ui(new Ui::CLinkList)
 {
     //初始化数据
     ui->setupUi(this);
@@ -34,18 +34,18 @@ LinkList::LinkList(QWidget *parent) :
     ui->horizontalSlider->setValue(MAX_SLIDER>>1);
     srand(time(NULL));
 
-    this->setWindowTitle("单链表");
+    this->setWindowTitle("循环链表");
 }
 
 //析构函数
-LinkList::~LinkList()
+CLinkList::~CLinkList()
 {
     destroySelf();
     delete ui;
 }
 
 //初始设置文本显示区
-void LinkList::initTextBrowser(){
+void CLinkList::initTextBrowser(){
     //加载html文件
     QFile file("../LinkListVisualizer/html/LinkList.html");
     file.open(QIODevice::ReadOnly);
@@ -58,7 +58,7 @@ void LinkList::initTextBrowser(){
 }
 
 //初始UI控件
-void LinkList::initUI()
+void CLinkList::initUI()
 {
     //set background image
     QPixmap background(":/ico/resource/background.png");
@@ -89,8 +89,8 @@ void LinkList::initUI()
     ui->lineEditState->setFont(dataFont);
     ui->lineEditInsert->setPlaceholderText("插入值：Int");
     ui->lineEditLocate->setPlaceholderText("查找值：Int");
-    ui->lineEditInsert->setValidator(&LinkList::dataValidator);
-    ui->lineEditLocate->setValidator(&LinkList::dataValidator);
+    ui->lineEditInsert->setValidator(&CLinkList::dataValidator);
+    ui->lineEditLocate->setValidator(&CLinkList::dataValidator);
     ui->lineEditState->setText("请选择操作");
 
     ui->horizontalSlider->setMinimum(0);
@@ -100,7 +100,7 @@ void LinkList::initUI()
 
 
 //初始化视图框架
-void LinkList::initSceneView()
+void CLinkList::initSceneView()
 {
     //为 view 配置相应 scene
     scene=new QGraphicsScene;
@@ -108,7 +108,7 @@ void LinkList::initSceneView()
     ui->graphicsView->setScene(scene);
 
     //添加链表符号及指针箭头
-    headLabel=scene->addText("L",headLabelFont);
+    headLabel=scene->addText("CL",headLabelFont);
     headLabel->setPos((VALUE_RECT_W-RECT_H)>>1,SPACING);
 
     headArrow=new MyArrowItem(ARROW_LEN);
@@ -117,7 +117,7 @@ void LinkList::initSceneView()
 }
 
 //操作之后调整右侧输入和显示控件
-void LinkList::adjustController()
+void CLinkList::adjustController()
 {
     //当经过插入或删除操作后，节点个数可能会改变，需考虑一些操作的合法性
     ui->pushButtonDelete->setEnabled(countNode);
@@ -143,40 +143,69 @@ void LinkList::adjustController()
 }
 
 //计算节点的Scene坐标
-QPoint LinkList::getLNodePos(int nodeNumber)
+QPoint CLinkList::getLNodePos(int nodeNumber)
 {
     const static int rowN=SCENE_MAX_W/NODE_W;
     return QPoint((nodeNumber+1)%rowN*NODE_W,(nodeNumber+1)/rowN*NODE_H);
 }
 
 //添加节点的GraphicsItem
-void LinkList::addLNodeGraphicsItem(LNode *pl, QPoint coord)
+void CLinkList::addLNodeGraphicsItem(LNode *pl, QPoint coord)
 {
     int x=coord.x(), y=coord.y();
 
-    pl->valueRect   =scene->addRect(x,y+SPACING,VALUE_RECT_W,RECT_H,QPen(),LinkList::markBrush);
+    pl->valueRect   =scene->addRect(x,y+SPACING,VALUE_RECT_W,RECT_H,QPen(),CLinkList::markBrush);
     pl->pointerRect =scene->addRect(x+VALUE_RECT_W,y+SPACING,POINTER_RECT_W,RECT_H);
-    pl->valueText   =scene->addText(pl->data,LinkList::dataFont);
+    pl->valueText   =scene->addText(pl->data,CLinkList::dataFont);
     pl->valueText->setPos(x,y+SPACING+5);
     if(pl->next==NULL)
     {
-        pl->pointerText=scene->addText(" ^",LinkList::dataFont);
+        pl->pointerText=scene->addText(" ^",CLinkList::dataFont);
         pl->pointerText->setPos(x+VALUE_RECT_W, y+SPACING+5);
     }
 }
 
 //调整节点的箭头
-void LinkList::adjustLNodeArrow(LNode *pLNode, int nodeNumber)
+void CLinkList::adjustLNodeArrow(LNode *pLNode, int nodeNumber)
 {
     for(auto &a:pLNode->arrowVector)
         scene->removeItem(a);
-    if(pLNode->next==NULL)
-        return ;
 
     QPoint myCoord=getLNodePos(nodeNumber);
     QPoint nextCoord=getLNodePos(nodeNumber+1);
 
     MyArrowItem *pArrow;
+
+    //若是指向头结点
+    if(pLNode->next==head)
+    {
+        QPoint point1(myCoord.x()+ARROW_H_OFFSET,myCoord.y()+ARROW_V_OFFSET);
+        QPoint point2(SCENE_MAX_W/NODE_W*NODE_W+10, point1.y());
+        QPoint point3(point2.x(), 1);
+        QPoint point4(NODE_W+(VALUE_RECT_W>>1), point3.y());
+
+        pArrow=new MyArrowItem(point2.x()-point1.x(),1,0);
+        scene->addItem(pArrow);
+        pArrow->setPos(point1);
+        pLNode->arrowVector.push_back(pArrow);
+
+        pArrow=new MyArrowItem(point2.y()-point3.y(),0,0);
+        scene->addItem(pArrow);
+        pArrow->setPos(point2);
+        pLNode->arrowVector.push_back(pArrow);
+
+        pArrow=new MyArrowItem(point3.x()-point4.x(),3,0);
+        scene->addItem(pArrow);
+        pArrow->setPos(point3);
+        pLNode->arrowVector.push_back(pArrow);
+
+        pArrow=new MyArrowItem(SPACING-point4.y(),2,1);
+        scene->addItem(pArrow);
+        pArrow->setPos(point4);
+        pLNode->arrowVector.push_back(pArrow);
+        return ;
+    }
+
     if(myCoord.y()==nextCoord.y())
     {
         //节点不是一行最后节点
@@ -210,7 +239,7 @@ void LinkList::adjustLNodeArrow(LNode *pLNode, int nodeNumber)
 }
 
 //调整节点Scene坐标
-void LinkList::adjustLNodePos(LNode *pLNode, QPoint coord)
+void CLinkList::adjustLNodePos(LNode *pLNode, QPoint coord)
 {
     int x=coord.x(), y=coord.y();
     pLNode->valueRect->setRect(x,y+SPACING,VALUE_RECT_W,RECT_H);
@@ -221,28 +250,32 @@ void LinkList::adjustLNodePos(LNode *pLNode, QPoint coord)
 }
 
 //设置链表所有节点显示模式
-void LinkList::setLinkListNormalBrush()
+void CLinkList::setCLinkListNormalBrush()
 {
-    for(LNode *pLNode=head;pLNode;pLNode=pLNode->next)
-        pLNode->setNodeStatus(LinkList::normalBursh);
+    head->setNodeStatus(CLinkList::normalBursh);
+    for(LNode *pLNode=head->next;pLNode!=head;pLNode=pLNode->next)
+        pLNode->setNodeStatus(CLinkList::normalBursh);
 }
 
 //创建链表初始化
-void LinkList::initLinkList()
+void CLinkList::initCLinkList()
 {
     initSceneView();
 
     head=new LNode("头结点", NULL);
+    head->next=head;
+
     addLNodeGraphicsItem(head, getLNodePos(0));
+    adjustLNodeArrow(head,0);
 }
 
 //插入节点到链表
-void LinkList::insertLNode(int pos, QString elem)
+void CLinkList::insertLNode(int pos, QString elem)
 {
     LNode *pInsertNode=NULL;
     LNode *pLNode=head;
 
-    head->setNodeStatus(LinkList::visitedBrush);
+    head->setNodeStatus(CLinkList::visitedBrush);
 
     //找到前驱节点指针
     for(int i=0;i<pos-1;++i)
@@ -250,7 +283,7 @@ void LinkList::insertLNode(int pos, QString elem)
         sleep(sleepTime);
 
         pLNode=pLNode->next;
-        pLNode->setNodeStatus(LinkList::visitedBrush);
+        pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
 
     if(pLNode->next==NULL){
@@ -277,12 +310,12 @@ void LinkList::insertLNode(int pos, QString elem)
 }
 
 //删除链表节点
-void LinkList::deleteLNode(int pos, QString &elem)
+void CLinkList::deleteLNode(int pos, QString &elem)
 {
     LNode *pDeleteNode=NULL;
     LNode *pLNode=head;
 
-    head->setNodeStatus(LinkList::visitedBrush);
+    head->setNodeStatus(CLinkList::visitedBrush);
 
     //找到前驱节点指针
     for(int i=0;i<pos-1;++i)
@@ -290,7 +323,7 @@ void LinkList::deleteLNode(int pos, QString &elem)
         sleep(sleepTime);
 
         pLNode=pLNode->next;
-        pLNode->setNodeStatus(LinkList::visitedBrush);
+        pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
 
     pDeleteNode=pLNode->next;
@@ -304,7 +337,7 @@ void LinkList::deleteLNode(int pos, QString &elem)
 
     if(pLNode->next==NULL){
         QPoint coord=getLNodePos(pos-1);
-        pLNode->pointerText=scene->addText(" ^",LinkList::dataFont);
+        pLNode->pointerText=scene->addText(" ^",CLinkList::dataFont);
         pLNode->pointerText->setPos(coord.x()+VALUE_RECT_W, coord.y()+SPACING+5);
     }
 
@@ -319,42 +352,48 @@ void LinkList::deleteLNode(int pos, QString &elem)
 }
 
 //查找链表节点
-bool LinkList::locateLNode(int &pos, QString elem)
+bool CLinkList::locateLNode(int &pos, QString elem)
 {
     LNode *pLNode=head;
 
-    head->setNodeStatus(LinkList::visitedBrush);
+    head->setNodeStatus(CLinkList::visitedBrush);
 
-    for(pos=1;pLNode&&pLNode->next&&pLNode->next->data!=elem;++pos)
+    for(pos=1;pLNode->next!=head&&pLNode->next->data!=elem;++pos)
     {
         sleep(sleepTime);
 
         pLNode=pLNode->next;
-        pLNode->setNodeStatus(LinkList::visitedBrush);
+        pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
 
     //找到相应节点
-    if(pLNode&&pLNode->next){
-        pLNode->next->setNodeStatus(LinkList::markBrush);
+    if(pLNode->next!=head){
+        pLNode->next->setNodeStatus(CLinkList::markBrush);
         return true;
     }
     return false;
 }
 
 //释放申请的内存空间
-void LinkList::destroySelf()
+void CLinkList::destroySelf()
 {
     if(scene==NULL)
         return ;
 
-    LNode *pLNode=head, *qLNode;
-    for(;pLNode;pLNode=qLNode)
+    LNode *pLNode=head->next, *qLNode;
+    for(;pLNode!=head;pLNode=qLNode)
     {
         sleep(sleepTime);
         qLNode=pLNode->next;
         pLNode->removeAll(scene);       //移除每个节点的图形Item
         delete pLNode;      //释放内存
     }
+
+    ////////////
+    head->removeAll(scene);     //移除头结点图形Item
+    delete head;                //释放内存
+    ///////////////
+
     scene->removeItem(headLabel);   //移除链表符号Item
     scene->removeItem(headArrow);   //移除链表符号后的箭头Item
     delete headLabel;       //释放内存
@@ -365,12 +404,12 @@ void LinkList::destroySelf()
 }
 
 //槽函数：点击创建
-void LinkList::on_pushButtonInit_clicked()
+void CLinkList::on_pushButtonInit_clicked()
 {
     //若已经建立，需要清除重建
     destroySelf();
 
-    initLinkList();
+    initCLinkList();
 
     ui->pushButtonClear->setEnabled(true);
     ui->pushButtonInsert->setEnabled(true);
@@ -386,16 +425,16 @@ void LinkList::on_pushButtonInit_clicked()
 }
 
 //槽函数：点击清空
-void LinkList::on_pushButtonClear_clicked()
+void CLinkList::on_pushButtonClear_clicked()
 {
     destroySelf();
     initUI();
 }
 
 //槽函数：点击插入
-void LinkList::on_pushButtonInsert_clicked()
+void CLinkList::on_pushButtonInsert_clicked()
 {
-    setLinkListNormalBrush();
+    setCLinkListNormalBrush();
 
     QString edit=ui->lineEditInsert->text();
 
@@ -416,11 +455,11 @@ void LinkList::on_pushButtonInsert_clicked()
 }
 
 //随机插入五个节点到链表末尾
-void LinkList::on_pushButtonRandomInsert5_clicked()
+void CLinkList::on_pushButtonRandomInsert5_clicked()
 {
     for(int i=0;i<5;++i)
     {
-        setLinkListNormalBrush();
+        setCLinkListNormalBrush();
         insertLNode(countNode+1,QString::number(rand()%999999999));
         adjustController();
         ui->lineEditState->setPalette(Qt::GlobalColor::green);
@@ -429,9 +468,9 @@ void LinkList::on_pushButtonRandomInsert5_clicked()
 }
 
 //槽函数：点击删除
-void LinkList::on_pushButtonDelete_clicked()
+void CLinkList::on_pushButtonDelete_clicked()
 {
-    setLinkListNormalBrush();
+    setCLinkListNormalBrush();
 
     QString deleteData;
     deleteLNode(ui->comboBoxDelete->currentText().toInt(),deleteData);
@@ -444,9 +483,9 @@ void LinkList::on_pushButtonDelete_clicked()
 }
 
 //槽函数：点击查找
-void LinkList::on_pushButtonLocate_clicked()
+void CLinkList::on_pushButtonLocate_clicked()
 {
-    setLinkListNormalBrush();
+    setCLinkListNormalBrush();
 
     QString edit=ui->lineEditLocate->text();
 
@@ -477,7 +516,7 @@ void LinkList::on_pushButtonLocate_clicked()
 }
 
 //调整演示的速度快慢
-void LinkList::on_horizontalSlider_valueChanged(int value)
+void CLinkList::on_horizontalSlider_valueChanged(int value)
 {
     sleepTime=MAX_SLEEP_TIME/(value+1);
 }

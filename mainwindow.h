@@ -8,6 +8,7 @@
 #include <QPalette>
 
 #include "linklist.h"
+#include "clinklist.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     LinkList linkList;
+    CLinkList clinklist;
 
     void initUI();
 };

@@ -28,17 +28,21 @@ SOURCES += \
     main.cpp \
     linklist.cpp \
     myarrowitem.cpp \
-    lnode.cpp
+    lnode.cpp \
+    clinklist.cpp
 
 HEADERS += \
         mainwindow.h \
     linklist.h \
     lnode.h \
-    myarrowitem.h
+    myarrowitem.h \
+    clinklist.h \
+    uidefine.h
 
 FORMS += \
         mainwindow.ui \
-    linklist.ui
+    linklist.ui \
+    clinklist.ui
 
 RESOURCES += \
     resource.qrc

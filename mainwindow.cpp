@@ -38,11 +38,13 @@ void MainWindow::on_pushButton1_clicked()
 {
     linkList.show();
 }
+
 //Cicular LinkList
 void MainWindow::on_pushButton2_clicked()
 {
-
+    clinklist.show();
 }
+
 //Double LinkList
 void MainWindow::on_pushButton3_clicked()
 {

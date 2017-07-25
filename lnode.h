@@ -9,6 +9,7 @@
 #include "myarrowitem.h"
 
 class LinkList;
+class CLinkList;
 
 class LNode
 {
@@ -31,6 +32,7 @@ protected:
 
 public:
     friend class LinkList;
+    friend class CLinkList;
 };
 
 #endif // LNODE_H

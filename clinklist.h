@@ -1,5 +1,5 @@
-﻿#ifndef LINKLIST_H
-#define LINKLIST_H
+#ifndef CLINKLIST_H
+#define CLINKLIST_H
 
 #include <QWidget>
 #include <QFile>
@@ -13,16 +13,16 @@
 #include "lnode.h"
 
 namespace Ui {
-class LinkList;
+class CLinkList;
 }
 
-class LinkList : public QWidget
+class CLinkList : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit LinkList(QWidget *parent = 0);			//构造函数
-    ~LinkList();									//析构函数
+    explicit CLinkList(QWidget *parent = 0);			//构造函数
+    ~CLinkList();                                       //析构函数
 
 private slots:
     void on_pushButtonInit_clicked();					//槽函数：点击创建
@@ -40,7 +40,7 @@ private slots:
     void on_horizontalSlider_valueChanged(int value);	//调整演示的速度快慢
 
 protected:
-    Ui::LinkList *ui;               //UI指针
+    Ui::CLinkList *ui;               //UI指针
     QGraphicsScene *scene;          //视图场景指针
     QGraphicsTextItem *headLabel;   //链表符号指针
     MyArrowItem *headArrow;         //符号箭头指针
@@ -57,9 +57,9 @@ protected:
     void addLNodeGraphicsItem(LNode *pl, QPoint coord);		//添加节点的GraphicsItem
     void adjustLNodeArrow(LNode *pLNode, int nodeNumber);	//调整节点的箭头
     void adjustLNodePos(LNode *pLNode, QPoint coord);		//调整节点Scene坐标
-    void setLinkListNormalBrush();							//设置链表所有节点显示模式
+    void setCLinkListNormalBrush();							//设置链表所有节点显示模式
 
-    void initLinkList();						//创建链表初始化
+    void initCLinkList();						//创建链表初始化
     void insertLNode(int pos, QString elem);	//插入节点到链表
     void deleteLNode(int pos, QString &elem);	//删除链表节点
     bool locateLNode(int &pos,QString elem);	//查找链表节点
@@ -72,4 +72,4 @@ private:
     const static QIntValidator dataValidator;
 };
 
-#endif // LINKLIST_H
+#endif // CLINKLIST_H
