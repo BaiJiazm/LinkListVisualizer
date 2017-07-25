@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/ico">
+        <file>resource/exe.ico</file>
+        <file>resource/splash.png</file>
+        <file>resource/background.png</file>
+    </qresource>
+    <qresource prefix="/tip">
+        <file>resource/clinklist.png</file>
+        <file>resource/dlinklist.png</file>
+        <file>resource/linklist.png</file>
+    </qresource>
+</RCC>
