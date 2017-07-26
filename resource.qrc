@@ -9,4 +9,9 @@
         <file>resource/dlinklist.png</file>
         <file>resource/linklist.png</file>
     </qresource>
+	<qresource prefix="/html">
+        <file>html/LinkList.html</file>
+        <file>html/CLinkList.html</file>
+		<file>html/DLinkList.html</file>
+    </qresource>
 </RCC>

@@ -47,7 +47,7 @@ CLinkList::~CLinkList()
 //初始设置文本显示区
 void CLinkList::initTextBrowser(){
     //加载html文件
-    QFile file("../LinkListVisualizer/html/LinkList.html");
+    QFile file(":/html/html/CLinkList.html");
     file.open(QIODevice::ReadOnly);
     QString htmlString=file.readAll();
     ui->textBrowser->setHtml(htmlString);
@@ -110,7 +110,7 @@ void CLinkList::initSceneView()
     //添加链表符号及指针箭头
     headLabel=scene->addText("CL",headLabelFont);
     headLabel->setPos((VALUE_RECT_W-RECT_H)>>1,SPACING);
-
+sleep(sleepTime);
     headArrow=new MyArrowItem(ARROW_LEN);
     scene->addItem(headArrow);
     headArrow->setPos(ARROW_H_OFFSET,ARROW_V_OFFSET);
@@ -261,7 +261,7 @@ void CLinkList::setCLinkListNormalBrush()
 void CLinkList::initCLinkList()
 {
     initSceneView();
-
+sleep(sleepTime);
     head=new LNode("头结点", NULL);
     head->next=head;
 
@@ -285,7 +285,7 @@ void CLinkList::insertLNode(int pos, QString elem)
         pLNode=pLNode->next;
         pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
-
+sleep(sleepTime);
     if(pLNode->next==NULL){
         scene->removeItem(pLNode->pointerText);
         pLNode->pointerText=NULL;
@@ -325,7 +325,7 @@ void CLinkList::deleteLNode(int pos, QString &elem)
         pLNode=pLNode->next;
         pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
-
+sleep(sleepTime);
     pDeleteNode=pLNode->next;
     pLNode->next=pDeleteNode->next;
     elem=pDeleteNode->data;
@@ -365,7 +365,7 @@ bool CLinkList::locateLNode(int &pos, QString elem)
         pLNode=pLNode->next;
         pLNode->setNodeStatus(CLinkList::visitedBrush);
     }
-
+sleep(sleepTime);
     //找到相应节点
     if(pLNode->next!=head){
         pLNode->next->setNodeStatus(CLinkList::markBrush);
@@ -388,7 +388,7 @@ void CLinkList::destroySelf()
         pLNode->removeAll(scene);       //移除每个节点的图形Item
         delete pLNode;      //释放内存
     }
-
+sleep(sleepTime);
     ////////////
     head->removeAll(scene);     //移除头结点图形Item
     delete head;                //释放内存
@@ -435,7 +435,7 @@ void CLinkList::on_pushButtonClear_clicked()
 void CLinkList::on_pushButtonInsert_clicked()
 {
     setCLinkListNormalBrush();
-
+sleep(sleepTime);
     QString edit=ui->lineEditInsert->text();
 
     //若输入无效或未输入
@@ -460,6 +460,7 @@ void CLinkList::on_pushButtonRandomInsert5_clicked()
     for(int i=0;i<5;++i)
     {
         setCLinkListNormalBrush();
+sleep(sleepTime);
         insertLNode(countNode+1,QString::number(rand()%999999999));
         adjustController();
         ui->lineEditState->setPalette(Qt::GlobalColor::green);
@@ -471,7 +472,7 @@ void CLinkList::on_pushButtonRandomInsert5_clicked()
 void CLinkList::on_pushButtonDelete_clicked()
 {
     setCLinkListNormalBrush();
-
+sleep(sleepTime);
     QString deleteData;
     deleteLNode(ui->comboBoxDelete->currentText().toInt(),deleteData);
 
@@ -486,7 +487,7 @@ void CLinkList::on_pushButtonDelete_clicked()
 void CLinkList::on_pushButtonLocate_clicked()
 {
     setCLinkListNormalBrush();
-
+sleep(sleepTime);
     QString edit=ui->lineEditLocate->text();
 
     //若输入无效或未输入

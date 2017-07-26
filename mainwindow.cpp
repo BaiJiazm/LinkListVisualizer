@@ -48,5 +48,5 @@ void MainWindow::on_pushButton2_clicked()
 //Double LinkList
 void MainWindow::on_pushButton3_clicked()
 {
-
+    dlinklist.show();
 }

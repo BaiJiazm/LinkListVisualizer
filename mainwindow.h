@@ -9,6 +9,7 @@
 
 #include "linklist.h"
 #include "clinklist.h"
+#include "dlinklist.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +34,7 @@ private:
     Ui::MainWindow *ui;
     LinkList linkList;
     CLinkList clinklist;
+    DLinkList dlinklist;
 
     void initUI();
 };
