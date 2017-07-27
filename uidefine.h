@@ -4,8 +4,8 @@
 #define MAX_SLIDER 20            //速度调节器的最大倍数值
 #define MAX_SLEEP_TIME 1000     //演示最大延时ms
 
-#define SCENE_MAX_W 550         //视图场景最大宽度pix
-#define SCENE_MAX_H 390         //视图场景最大高度pix
+#define SCENE_MAX_W 750         //视图场景最大宽度pix
+#define SCENE_MAX_H 590         //视图场景最大高度pix
 
 #define VALUE_RECT_W    75      //节点域矩形框宽度pix
 #define POINTER_RECT_W  25      //指针域矩形宽度pix

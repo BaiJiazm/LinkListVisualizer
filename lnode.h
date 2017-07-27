@@ -14,8 +14,8 @@ class CLinkList;
 class LNode
 {
 public:
-    LNode(QString dt, LNode *nt);
-    ~LNode();
+    LNode(QString dt, LNode *nt);       //构造函数
+    ~LNode();                           //析构函数
     void setValueRect(QGraphicsRectItem* vRect);
     void setPointerRect(QGraphicsRectItem* pRect);
     void setTextRect(QGraphicsTextItem* vText);
@@ -24,8 +24,10 @@ public:
     void removeAll(QGraphicsScene *scene);
 
 protected:
-    QString data;
-    LNode * next;
+    QString data;       //节点数据域
+    LNode * next;       //节点指针域
+
+    //节点图形项
     QGraphicsRectItem * valueRect, *pointerRect;
     QGraphicsTextItem * valueText, *pointerText;
     std::vector<MyArrowItem*> arrowVector;

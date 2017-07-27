@@ -153,7 +153,7 @@ QPoint LinkList::getLNodePos(int nodeNumber)
 void LinkList::addLNodeGraphicsItem(LNode *pl, QPoint coord)
 {
     int x=coord.x(), y=coord.y();
-
+qDebug()<<"x="<<x<<" y="<<y<<"\n";
     pl->valueRect   =scene->addRect(x,y+SPACING,VALUE_RECT_W,RECT_H,QPen(),LinkList::markBrush);
     pl->pointerRect =scene->addRect(x+VALUE_RECT_W,y+SPACING,POINTER_RECT_W,RECT_H);
     pl->valueText   =scene->addText(pl->data,LinkList::dataFont);
